@@ -1,0 +1,2 @@
+{"@t":"2025-12-11T11:19:10.6667040Z","@mt":"Acquiring MainDom.","SourceContext":"Umbraco.Cms.Core.Runtime.MainDom","ProcessId":98,"ProcessName":"dotnet","ThreadId":1,"ApplicationId":"d2b6c12ab2d22552b3a7faee0509e6139f633afc","MachineName":"fdb17a5b6d2a","Log4NetLevel":"INFO "}
+{"@t":"2025-12-11T11:19:18.0521675Z","@mt":"Acquired MainDom.","SourceContext":"Umbraco.Cms.Core.Runtime.MainDom","ProcessId":98,"ProcessName":"dotnet","ThreadId":1,"ApplicationId":"d2b6c12ab2d22552b3a7faee0509e6139f633afc","MachineName":"fdb17a5b6d2a","Log4NetLevel":"INFO "}

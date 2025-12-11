@@ -1,15 +1,24 @@
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
+
+// Создаем необходимые директории для Umbraco
+var mediaPath = Path.Combine(builder.Environment.WebRootPath, "media");
+var appDataPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+
+if (!Directory.Exists(mediaPath))
+    Directory.CreateDirectory(mediaPath);
+if (!Directory.Exists(appDataPath))
+    Directory.CreateDirectory(appDataPath);
 
 builder.CreateUmbracoBuilder()
     .AddBackOffice()
     .AddWebsite()
+    .AddDeliveryApi()
     .AddComposers()
     .Build();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 await app.BootUmbracoAsync();
-
 
 app.UseUmbraco()
     .WithMiddleware(u =>

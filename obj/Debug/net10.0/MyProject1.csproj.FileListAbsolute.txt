@@ -1158,3 +1158,4 @@ C:\Users\Vlad\OneDrive\Desktop\Новая папка (3)\MyProject1\obj\Debug\ne
 C:\Users\Vlad\OneDrive\Desktop\Новая папка (3)\MyProject1\obj\Debug\net10.0\MyProject1.pdb
 C:\Users\Vlad\OneDrive\Desktop\Новая папка (3)\MyProject1\obj\Debug\net10.0\MyProject1.genruntimeconfig.cache
 C:\Users\Vlad\OneDrive\Desktop\Новая папка (3)\MyProject1\obj\Debug\net10.0\ref\MyProject1.dll
+C:\Users\Vlad\OneDrive\Desktop\Новая папка (3)\MyProject1\obj\Debug\net10.0\MyProject1.sourcelink.json
