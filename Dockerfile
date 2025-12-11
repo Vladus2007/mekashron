@@ -35,36 +35,57 @@ WORKDIR /app
 # Копируем опубликованные файлы
 COPY --from=publish /app/publish .
 
-# Создаем пользователя для безопасности
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+# ПРОВЕРЯЕМ существующих пользователей (для отладки)
+RUN echo "Existing users:" && cat /etc/passwd | grep -E ":(1000|appuser):"
+
+# Создаем пользователя только если его нет
+RUN if ! id -u appuser >/dev/null 2>&1; then \
+        useradd -m -u 1001 appuser; \
+        echo "Created user appuser with UID 1001"; \
+    else \
+        echo "User appuser already exists"; \
+    fi
+
+# ИЛИ просто используем существующего пользователя (альтернатива)
+# USER 1000:1000  # если пользователь с UID 1000 уже существует
 
 # Создаем необходимые директории
 RUN mkdir -p /app/wwwroot/media \
     && mkdir -p /app/wwwroot/umbraco \
     && mkdir -p /app/App_Data \
-    && mkdir -p /app/Data \
-    && chown -R appuser:appuser /app/wwwroot \
-    && chown -R appuser:appuser /app/App_Data
+    && mkdir -p /app/Data
 
-# Устанавливаем правильные права для SQLite файла
-RUN chmod 755 /app/App_Data
+# Устанавливаем правильные права
+RUN chown -R appuser:appuser /app \
+    && chmod -R 755 /app/wwwroot/media \
+    && chmod -R 755 /app/App_Data \
+    && chmod -R 755 /app/wwwroot/umbraco
 
 # Создаем entrypoint скрипт
 RUN echo '#!/bin/sh\n\
-# Создаем директории при запуске\n\
-mkdir -p /app/wwwroot/media\n\
-mkdir -p /app/wwwroot/umbraco\n\
-mkdir -p /app/App_Data\n\
-mkdir -p /app/Data\n\
+set -e\n\
+echo "Starting Umbraco with SQLite..."\n\
+\n\
+# Создаем директории при запуске если их нет\n\
+for dir in /app/wwwroot/media /app/wwwroot/umbraco /app/App_Data /app/Data; do\n\
+    if [ ! -d "\$dir" ]; then\n\
+        mkdir -p "\$dir"\n\
+        echo "Created directory: \$dir"\n\
+    fi\n\
+done\n\
 \n\
 # Устанавливаем правильные права\n\
-chown -R appuser:appuser /app/wwwroot/media\n\
-chown -R appuser:appuser /app/App_Data\n\
-chmod -R 755 /app/wwwroot/media\n\
-chmod -R 755 /app/App_Data\n\
+chown -R appuser:appuser /app 2>/dev/null || true\n\
+chmod -R 755 /app/wwwroot/media 2>/dev/null || true\n\
+chmod -R 755 /app/App_Data 2>/dev/null || true\n\
 \n\
-# Переключаемся на непривилегированного пользователя\n\
-exec dotnet MyProject1.dll "$@"' > /entrypoint.sh \
+echo "Running as user: \$(whoami)"\n\
+echo "Current directory: \$(pwd)"\n\
+echo "Directory contents:"\n\
+ls -la\n\
+\n\
+# Запускаем приложение\n\
+exec dotnet MyProject1.dll "\$@"' > /entrypoint.sh \
     && chmod +x /entrypoint.sh
 
 USER appuser
