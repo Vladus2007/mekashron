@@ -1,0 +1,33 @@
+﻿services:
+  - type: web
+    name: umbraco-sqlite
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://*:$PORT
+      # Для SQLite
+      - key: Umbraco__CMS__DataDirectory
+        value: /app/App_Data
+      # Debug logging для первой установки
+      - key: Serilog__MinimumLevel__Default
+        value: Debug
+    # Диски для сохранения данных между деплоями
+    disks:
+      - name: appdata
+        mountPath: /app/App_Data
+        sizeGB: 1
+      - name: media
+        mountPath: /app/wwwroot/media
+        sizeGB: 5
+    healthCheckPath: /umbraco
+    autoDeploy: true
+    # Ресурсы (увеличьте если нужно)
+    plan: starter
+    # или для production:
+    # plan: professional
+    # resources:
+    #   cpu: 1
+    #   memory: 2GB

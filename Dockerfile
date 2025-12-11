@@ -1,30 +1,72 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
+# Базовый образ ASP.NET Core 10.0
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
+# Устанавливаем SQLite и другие зависимости
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Этот этап используется для сборки проекта службы
+# Этап сборки
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Копируем и восстанавливаем зависимости
 COPY ["MyProject1.csproj", "."]
 RUN dotnet restore "./MyProject1.csproj"
+
+# Копируем все файлы и собираем
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./MyProject1.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./MyProject1.csproj" -c Release -o /app/build
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
+# Этап публикации
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./MyProject1.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./MyProject1.csproj" -c Release -o /app/publish \
+    --no-restore \
+    -p:UseAppHost=false \
+    -p:EnableCompressionInSingleFile=true
 
-# Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
+# Финальный этап
 FROM base AS final
 WORKDIR /app
+
+# Копируем опубликованные файлы
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MyProject1.dll"]
+
+# Создаем пользователя для безопасности
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+
+# Создаем необходимые директории
+RUN mkdir -p /app/wwwroot/media \
+    && mkdir -p /app/wwwroot/umbraco \
+    && mkdir -p /app/App_Data \
+    && mkdir -p /app/Data \
+    && chown -R appuser:appuser /app/wwwroot \
+    && chown -R appuser:appuser /app/App_Data
+
+# Устанавливаем правильные права для SQLite файла
+RUN chmod 755 /app/App_Data
+
+# Создаем entrypoint скрипт
+RUN echo '#!/bin/sh\n\
+# Создаем директории при запуске\n\
+mkdir -p /app/wwwroot/media\n\
+mkdir -p /app/wwwroot/umbraco\n\
+mkdir -p /app/App_Data\n\
+mkdir -p /app/Data\n\
+\n\
+# Устанавливаем правильные права\n\
+chown -R appuser:appuser /app/wwwroot/media\n\
+chown -R appuser:appuser /app/App_Data\n\
+chmod -R 755 /app/wwwroot/media\n\
+chmod -R 755 /app/App_Data\n\
+\n\
+# Переключаемся на непривилегированного пользователя\n\
+exec dotnet MyProject1.dll "$@"' > /entrypoint.sh \
+    && chmod +x /entrypoint.sh
+
+USER appuser
+
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
