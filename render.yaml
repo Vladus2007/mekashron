@@ -8,13 +8,13 @@
         value: Production
       - key: ASPNETCORE_URLS
         value: http://*:$PORT
-      # Для SQLite
+      # Принудительно указываем путь к данным
       - key: Umbraco__CMS__DataDirectory
         value: /app/App_Data
-      # Debug logging для первой установки
+      # Для отладки включаем логи
       - key: Serilog__MinimumLevel__Default
         value: Debug
-    # Диски для сохранения данных между деплоями
+    # Диски для хранения данных
     disks:
       - name: appdata
         mountPath: /app/App_Data
@@ -24,10 +24,6 @@
         sizeGB: 5
     healthCheckPath: /umbraco
     autoDeploy: true
-    # Ресурсы (увеличьте если нужно)
-    plan: starter
-    # или для production:
-    # plan: professional
-    # resources:
-    #   cpu: 1
-    #   memory: 2GB
+    # Пробуем увеличить таймауты
+    initialDelaySec: 60
+    maxShutdownDelaySec: 30
