@@ -1,40 +1,17 @@
+using Umbraco.Cms.Core;
+using Umbraco.Cms.Web.Common.ApplicationBuilder;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Создаем директории при запуске
-var contentRootPath = builder.Environment.ContentRootPath;
-var webRootPath = builder.Environment.WebRootPath;
+// Важно: НЕ создавайте директории в Program.cs!
+// Umbraco сам создаст нужные директории через EssentialDirectoryCreator
+// Удалите весь код создания директорий
 
-Console.WriteLine("Creating directories...");
+// Просто логируем информацию для отладки
+Console.WriteLine($"Content Root: {builder.Environment.ContentRootPath}");
+Console.WriteLine($"Web Root: {builder.Environment.WebRootPath}");
 
-try
-{
-    // App_Data для SQLite
-    var appDataPath = Path.Combine(contentRootPath, "App_Data");
-    if (!Directory.Exists(appDataPath))
-    {
-        Directory.CreateDirectory(appDataPath);
-        Console.WriteLine($"Created: {appDataPath}");
-    }
-
-    // Media directory
-    var mediaPath = Path.Combine(webRootPath, "media");
-    if (!Directory.Exists(mediaPath))
-    {
-        Directory.CreateDirectory(mediaPath);
-        Console.WriteLine($"Created: {mediaPath}");
-    }
-
-    // Проверяем права
-    File.WriteAllText(Path.Combine(appDataPath, "test.txt"), "test");
-    File.Delete(Path.Combine(appDataPath, "test.txt"));
-    Console.WriteLine("Write permission OK");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Directory error: {ex.Message}");
-}
-
-// Настраиваем Umbraco
+// Настраиваем Umbraco - ТОЛЬКО ЭТО!
 builder.CreateUmbracoBuilder()
     .AddBackOffice()
     .AddWebsite()

@@ -8,8 +8,6 @@
         value: Production
       - key: ASPNETCORE_URLS
         value: http://*:$PORT
-      - key: Umbraco__CMS__DataDirectory
-        value: /app/App_Data
     disks:
       - name: appdata
         mountPath: /app/App_Data
