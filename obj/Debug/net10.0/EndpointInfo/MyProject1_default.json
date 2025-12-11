@@ -1,0 +1,522 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Default API",
+    "description": "All endpoints not defined under specific APIs",
+    "version": "Latest"
+  },
+  "paths": {
+    "/umbraco/skybrud/redirects": {
+      "put": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRedirectOptions"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRedirectOptions"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AddRedirectOptions"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Umb-Notifications": {
+                "description": "The list of notifications produced during the request.",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationHeaderModel"
+                  },
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "rootNodeKey",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/umbraco/skybrud/redirects/{id}": {
+      "delete": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Umb-Notifications": {
+                "description": "The list of notifications produced during the request.",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationHeaderModel"
+                  },
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/umbraco/skybrud/redirects/{key}": {
+      "delete": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Umb-Notifications": {
+                "description": "The list of notifications produced during the request.",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationHeaderModel"
+                  },
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EditRedirectOptions"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EditRedirectOptions"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/EditRedirectOptions"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Umb-Notifications": {
+                "description": "The list of notifications produced during the request.",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationHeaderModel"
+                  },
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/umbraco/skybrud/redirects/package": {
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/umbraco/skybrud/redirects/rootNodes": {
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/umbraco/skybrud/redirects/serverVariables": {
+      "get": {
+        "tags": [
+          "Skybrud Redirects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddRedirectOptions": {
+        "required": [
+          "destination",
+          "forwardQueryString",
+          "originalUrl",
+          "overwrite",
+          "rootNodeKey",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "overwrite": {
+            "type": "boolean"
+          },
+          "rootNodeKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "originalUrl": {
+            "type": "string"
+          },
+          "destination": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RedirectDestination"
+              }
+            ]
+          },
+          "type": {
+            "$ref": "#/components/schemas/RedirectType"
+          },
+          "forwardQueryString": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EditRedirectOptions": {
+        "required": [
+          "destination",
+          "forward",
+          "id",
+          "permanent",
+          "rootNodeKey"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "rootNodeKey": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "originalUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "destination": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RedirectDestination"
+              }
+            ]
+          },
+          "permanent": {
+            "type": "boolean"
+          },
+          "forward": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EventMessageTypeModel": {
+        "enum": [
+          "Default",
+          "Info",
+          "Error",
+          "Success",
+          "Warning"
+        ],
+        "type": "string"
+      },
+      "NotificationHeaderModel": {
+        "required": [
+          "category",
+          "message",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventMessageTypeModel"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RedirectDestination": {
+        "required": [
+          "fullUrl",
+          "id",
+          "key",
+          "type",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string",
+            "nullable": true
+          },
+          "fragment": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullUrl": {
+            "type": "string",
+            "readOnly": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/RedirectDestinationType"
+          },
+          "culture": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RedirectDestinationType": {
+        "enum": [
+          "Url",
+          "Content",
+          "Media"
+        ],
+        "type": "string"
+      },
+      "RedirectType": {
+        "enum": [
+          "Permanent",
+          "Temporary"
+        ],
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "Backoffice-User": {
+        "type": "oauth2",
+        "description": "Umbraco Authentication",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "/umbraco/management/api/v1/security/back-office/authorize",
+            "tokenUrl": "/umbraco/management/api/v1/security/back-office/token",
+            "scopes": { }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Skybrud Redirects"
+    }
+  ]
+}

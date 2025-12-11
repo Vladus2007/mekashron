@@ -1,0 +1,75 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@using System.Linq
+
+@{
+    // --- ПОДКЛЮЧЕНИЕ ШАБЛОНА ---
+    Layout = "Master.cshtml";
+
+    // --- ФУНКЦИЯ ПЕРЕВОДА ---
+    Func<string, string, string> T = (key, defaultText) =>
+    {
+        var translation = Umbraco.GetDictionaryValue(key);
+        return string.IsNullOrWhiteSpace(translation) ? defaultText : translation;
+    };
+
+    // Получаем текущую страницу загрузки
+    var downloadPage = Model;
+
+    // Получаем текст из редактора (если есть)
+    var bodyText = downloadPage.Value<string>("bodyText");
+}
+
+<main class="main" id="primary">
+    <section class="breadcrumbs">
+        <div class="container">
+            <h1 style="text-align: center;">
+                @T("Download.Title", "Download BusinessV7")
+            </h1>
+        </div>
+    </section>
+
+    <section class="info">
+        <div class="container">
+            @* Вывод описания из редактора Umbraco с переводом *@
+            @if (!string.IsNullOrWhiteSpace(bodyText))
+            {
+                @Html.Raw(bodyText)
+            }
+            else
+            {
+                <p style="text-align: center;">
+                    @T("Download.Description1", "Please fill in the form below to download your free trial.") <br>
+                    @T("Download.Description2", "We will only use this information to tell you about upgrades and other product-related announcements.") <br>
+                    @T("Download.Description3", "You can unsubscribe at any time.")
+                </p>
+                <p style="text-align: center; color: #800000;">
+                    @T("Download.PrivacyNotice", "Your email address will remain completely confidential and will not be shared with any another parties or placed on any mailing lists.")
+                </p>
+            }
+
+            <form>
+                <div class="form-group">
+                    <label for="name">@T("Form.Name", "Name")</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">@T("Form.Company", "Company Name:")</label>
+                    <input type="text" id="company">
+                </div>
+                <div class="form-group">
+                    <label for="phone">@T("Form.Phone", "Phone")</label>
+                    <input type="tel" id="phone">
+                </div>
+                <div class="form-group">
+                    <label for="email">@T("Form.Email", "Email:")</label>
+                    <input type="email" id="email" required>
+                </div>
+                <button class="button button--accent" type="submit">
+                    @T("Form.Submit", "Submit")
+                </button>
+            </form>
+        </div>
+    </section>
+</main>

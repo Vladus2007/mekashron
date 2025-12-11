@@ -1,0 +1,138 @@
+﻿@using Umbraco.Extensions
+@using System.Linq
+@using System.Collections.Generic
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var root = Model.AncestorOrSelf(1);
+
+    // --- ФУНКЦИЯ ПЕРЕВОДА ---
+    Func<string, string, string> T = (key, defaultText) =>
+    {
+        var translation = Umbraco.GetDictionaryValue(key);
+        return string.IsNullOrWhiteSpace(translation) ? defaultText : translation;
+    };
+
+    // Получаем текущий код языка
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    var cultureCodes = Model.Cultures?.Keys.ToList();
+    var hasLanguages = cultureCodes != null && cultureCodes.Count > 1;
+
+    // Нормализуем код языка
+    var currentLanguageCode = currentCulture?.ToLower() ?? "en-us";
+
+    // Словари для иконок и названий
+    var icons = new Dictionary<string, string> {
+        { "ru", "Russia.svg" },
+        { "ru-ru", "Russia.svg" },
+        { "uk-ua", "Ukraine.svg" },
+        { "uk", "Ukraine.svg" },
+        { "en-us", "USA.svg" },
+        { "en", "USA.svg" }
+    };
+
+    var names = new Dictionary<string, string> {
+        { "ru", "Русский" },
+        { "ru-ru", "Русский" },
+        { "uk-ua", "Українська" },
+        { "uk", "Українська" },
+        { "en-us", "English" },
+        { "en", "English" }
+    };
+
+    // Получаем данные для текущего языка
+    var normalizedCulture = currentCulture?.ToLower() ?? "en-us";
+    var curIcon = icons.ContainsKey(normalizedCulture) ? icons[normalizedCulture] : "USA.svg";
+    var curName = names.ContainsKey(normalizedCulture) ? names[normalizedCulture] : "English";
+
+    // Получаем URL для страниц с текущим языком
+    var downloadPage = root?.FirstChild(x => x.ContentType.Alias == "downloadPage")
+                    ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "downloadPage");
+
+    var downloadPageUrl = downloadPage?.Url(culture: currentCulture) ?? "/download";
+    var solutionsPageUrl = root?.FirstChild(x => x.ContentType.Alias == "solutionsPage")?.Url(culture: currentCulture) ?? "/solutions";
+    var aboutPageUrl = root?.FirstChild(x => x.ContentType.Alias == "aboutPage")?.Url(culture: currentCulture) ?? "/about";
+   
+}
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__inner">
+            <div class="column">
+                <a href="@root?.Url()" class="logo">
+                    Mekashron
+                </a>
+                <p>
+                    <b>@T("Footer.Title", "Boost Efficiency, Cut Costs, and Accelerate Growth")</b> <br>
+                    @T("Footer.Subtitle", "Powered by AI partner with 20 years of experience, you can Trust")
+                </p>
+            </div>
+            <div class="column">
+                <div class="footer__actions">
+                    <nav class="footer__nav">
+                        <ul class="footer__nav--list">
+                            <li><a href="#">@T("Footer.Products", "Products")</a></li>
+                            <li><a href="@downloadPageUrl">@T("Footer.Solutions", "Solutions")</a></li>
+                            <li><a href="#">@T("Footer.About", "About")</a></li>
+                            <li><a href="#">@T("Footer.Industries", "Industries")</a></li>
+                            <li><a href="#">@T("Footer.Contact", "Contact")</a></li>
+                        </ul>
+                    </nav>
+                    <div class="column">
+                        <nav class="footer__links">
+                            <ul class="footer__links--list">
+                                <li>
+                                    <a href="https://wa.me/#" target="_blank">
+                                        <img src="/assets/images/icons/whatsapp-icon.svg" alt="whatsapp">
+                                        @T("Footer.ContactWhatsApp", "Contact us by WhatsApp")
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:info@mekashron.com">
+                                        <img src="/assets/images/icons/mail.svg" alt="mail">
+                                        info@mekashron.com
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        @if (hasLanguages)
+                        {
+                            <button class="language" id="language_btn">
+                                <ul id="language-menu" class="language__list">
+                                    <li>
+                                        <a href="javascript:;">
+                                            <img src="/assets/images/icons/country/@curIcon" width="16" alt="@curName">
+                                            <span>@curName</span>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            @foreach (var code in cultureCodes)
+                                            {
+                                                if (code == currentCulture) continue;
+
+                                                var url = Model.Url(code);
+                                                var normalizedCode = code?.ToLower() ?? "en-us";
+                                                var icon = icons.ContainsKey(normalizedCode) ? icons[normalizedCode] : "USA.svg";
+                                                var name = names.ContainsKey(normalizedCode) ? names[normalizedCode] : "English";
+
+                                                <li>
+                                                    <a href="@url">
+                                                        <img src="/assets/images/icons/country/@icon" width="16" alt="@name">
+                                                        <span>@name</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <p>© @DateTime.Now.Year Mekashron. @T("Footer.Copyright", "All rights reserved.")</p>
+        </div>
+    </div>
+</footer>

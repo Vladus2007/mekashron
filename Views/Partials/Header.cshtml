@@ -1,0 +1,119 @@
+﻿@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var root = Model.AncestorOrSelf(1);
+    var homePage = Model.Root();
+
+    // --- ФУНКЦИЯ ПЕРЕВОДА ---
+    Func<string, string, string> T = (key, defaultText) =>
+    {
+        var translation = Umbraco.GetDictionaryValue(key);
+        return string.IsNullOrWhiteSpace(translation) ? defaultText : translation;
+    };
+
+    // Получаем текущий язык
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    var downloadPage = root?.FirstChild(x => x.ContentType.Alias == "downloadPage")
+                   ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "downloadPage");
+
+    var downloadPageUrl = downloadPage?.Url(culture: currentCulture) ?? "/download";
+    // Находим страницы для навигации
+    var solutionsPage = root?.FirstChild(x => x.ContentType.Alias == "solutionsPage")
+                      ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "solutionsPage");
+    var productsPage = root?.FirstChild(x => x.ContentType.Alias == "productsPage")
+                     ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "productsPage");
+    var industriesPage = root?.FirstChild(x => x.ContentType.Alias == "industriesPage")
+                       ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "industriesPage");
+    var aboutPage = root?.FirstChild(x => x.ContentType.Alias == "aboutPage")
+                  ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "aboutPage");
+    var contactPage = root?.FirstChild(x => x.ContentType.Alias == "contactPage")
+                    ?? root?.Descendants().FirstOrDefault(x => x.ContentType.Alias == "contactPage");
+
+    // Создаем URL с учетом языка
+    var solutionsUrl = solutionsPage?.Url(culture: currentCulture) ?? "/solutions";
+    var productsUrl = productsPage?.Url(culture: currentCulture) ?? "/products";
+    var industriesUrl = industriesPage?.Url(culture: currentCulture) ?? "/industries";
+    var aboutUrl = aboutPage?.Url(culture: currentCulture) ?? "/about";
+    var contactUrl = contactPage?.Url(culture: currentCulture) ?? "/contact";
+}
+
+<!-- DESKTOP HEADER -->
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <button class="burger" id="burgerButton">
+                <img src="/assets/images/icons/burger.svg" alt="menu">
+            </button>
+            <a href="@root?.Url()" class="logo">
+                Mekashron
+            </a>
+
+            <nav class="header__navigation navigation">
+                <ul class="navigation__list">
+                    <li class="menu-item">
+                        <a href="@downloadPageUrl">@T("Header.Solutions", "Solutions")</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#">@T("Header.Products", "Products")</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#">@T("Header.Industries", "Industries")</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#">@T("Header.About", "About")</a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#">@T("Header.Contacts", "Contacts")</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header__actions row">
+                <a href="#" class="button">@T("Header.GetInTouch", "Get in Touch")</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile__nav">
+    <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <button class="icon close" id="closeMenu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M12.0001 9.8183L2.18182 0L0 2.18182L9.8183 12.0001L0.000232995 21.8182L2.18205 24L12.0001 14.1819L21.8182 24L24 21.8182L14.1819 12.0001L24.0002 2.18182L21.8184 1.07288e-06L12.0001 9.8183Z"
+                              fill="white" />
+                    </svg>
+                </button>
+                <a href="@root?.Url()" class="logo">
+                    Mekashron
+                </a>
+                <div class="header__actions row">
+                    <a href="@contactUrl" class="button">@T("Header.GetInTouch", "Get in Touch")</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="nav" role="navigation" aria-label="mobile navigation">
+        <ul class="navigation__list">
+            <li class="menu-item">
+                <a href="@solutionsUrl">@T("Header.Solutions", "Solutions")</a>
+            </li>
+            <li class="menu-item">
+                <a href="@productsUrl">@T("Header.Products", "Products")</a>
+            </li>
+            <li class="menu-item">
+                <a href="@industriesUrl">@T("Header.Industries", "Industries")</a>
+            </li>
+            <li class="menu-item">
+                <a href="@aboutUrl">@T("Header.About", "About")</a>
+            </li>
+            <li class="menu-item">
+                <a href="@contactUrl">@T("Header.Contacts", "Contacts")</a>
+            </li>
+        </ul>
+    </nav>
+</div>

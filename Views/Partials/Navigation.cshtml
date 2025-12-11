@@ -1,0 +1,48 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.PublishedContent
+
+@{
+    // Получаем корневую страницу
+    var root = Model.Root();
+    
+    // Получаем все видимые страницы с учетом настройки showInNavigation
+    var navigationItems = root?.Children?
+        .Where(x => x.IsVisible() && 
+                    x.Value<bool>("showInNavigation", true))
+        .ToList() ?? new List<IPublishedContent>();
+}
+
+@if (navigationItems?.Any() == true)
+{
+    <ul class="navigation">
+        @foreach (var item in navigationItems)
+        {
+            var children = item.Children?
+                .Where(x => x.IsVisible() && 
+                            x.Value<bool>("showInNavigation", true))
+                .ToList();
+            var hasChildren = children?.Any() == true;
+            var navigationTitle = item.Value<string>("navigationTitle", fallback: Fallback.ToDefaultValue, defaultValue: item.Name);
+            
+            <li class="nav-item @(item.IsAncestorOrSelf(Model) ? "active" : null) @(hasChildren ? "has-children" : null)">
+                <a href="@item.Url()" class="nav-link">
+                    @navigationTitle
+                </a>
+                
+                @if (hasChildren)
+                {
+                    <ul class="sub-menu">
+                        @foreach (var child in children)
+                        {
+                            var childTitle = child.Value<string>("navigationTitle", fallback: Fallback.ToDefaultValue, defaultValue: child.Name);
+                            <li class="@(child.IsAncestorOrSelf(Model) ? "active" : null)">
+                                <a href="@child.Url()">@childTitle</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+}

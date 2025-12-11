@@ -1,0 +1,103 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CompressionEnabled>false</CompressionEnabled> <!-- Disable compression. E.g. for umbraco backoffice files. These files should be precompressed by node and not let dotnet handle it -->
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="wwwroot\assets\css\style.css" />
+    <None Include="wwwroot\assets\css\style.css.map" />
+    <None Include="wwwroot\assets\css\swiper-bundle.min.css" />
+    <None Include="wwwroot\assets\fonts\Gilroy-Regular.woff2" />
+    <None Include="wwwroot\assets\images\favicon.png" />
+    <None Include="wwwroot\assets\images\hero.png" />
+    <None Include="wwwroot\assets\images\icons\arrow-down-gray.svg" />
+    <None Include="wwwroot\assets\images\icons\arrow-down.svg" />
+    <None Include="wwwroot\assets\images\icons\burger.svg" />
+    <None Include="wwwroot\assets\images\icons\check.svg" />
+    <None Include="wwwroot\assets\images\icons\chevron-right.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Australia.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Canada.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Francais.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Germany.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Italy.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Russia.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Spain.svg" />
+    <None Include="wwwroot\assets\images\icons\country\UK.svg" />
+    <None Include="wwwroot\assets\images\icons\country\Ukraine.svg" />
+    <None Include="wwwroot\assets\images\icons\country\USA.svg" />
+    <None Include="wwwroot\assets\images\icons\expertise\ai.svg" />
+    <None Include="wwwroot\assets\images\icons\expertise\apps.svg" />
+    <None Include="wwwroot\assets\images\icons\expertise\gaming.svg" />
+    <None Include="wwwroot\assets\images\icons\expertise\solution.svg" />
+    <None Include="wwwroot\assets\images\icons\mail.svg" />
+    <None Include="wwwroot\assets\images\icons\usa.svg" />
+    <None Include="wwwroot\assets\images\icons\whatsapp-icon.svg" />
+    <None Include="wwwroot\assets\images\platform.png" />
+    <None Include="wwwroot\assets\images\products\mekashron.png" />
+    <None Include="wwwroot\assets\images\products\profichat.png" />
+    <None Include="wwwroot\assets\images\products\zmenu.png" />
+    <None Include="wwwroot\assets\images\serve\ai.svg" />
+    <None Include="wwwroot\assets\images\serve\bag.svg" />
+    <None Include="wwwroot\assets\images\serve\cart.svg" />
+    <None Include="wwwroot\assets\images\serve\gaming.svg" />
+    <None Include="wwwroot\assets\js\jquery-3.7.1.min.js" />
+    <None Include="wwwroot\assets\js\scripts.js" />
+    <None Include="wwwroot\assets\js\select.js" />
+    <None Include="wwwroot\assets\js\swiper-bundle.min.js" />
+    <None Include="wwwroot\assets\scss\blocks\_about.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_breadcrumbs.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_button-burger.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_button.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_expertise.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_footer.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_form.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_header.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_hero.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_info.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_language.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_logo.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_navigation.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_platform.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_products.scss" />
+    <None Include="wwwroot\assets\scss\blocks\_select.scss" />
+    <None Include="wwwroot\assets\scss\style.scss" />
+    <None Include="wwwroot\assets\scss\_animations.scss" />
+    <None Include="wwwroot\assets\scss\_fonts.scss" />
+    <None Include="wwwroot\assets\scss\_globals.scss" />
+    <None Include="wwwroot\assets\scss\_media.scss" />
+    <None Include="wwwroot\assets\scss\_mixins.scss" />
+    <None Include="wwwroot\assets\scss\_normalize.scss" />
+    <None Include="wwwroot\assets\scss\_utils.scss" />
+    <None Include="wwwroot\assets\scss\_veriables.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="17.0.0" />
+    <PackageReference Include="Umbraco.Cms" Version="17.0.1" />
+    <PackageReference Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="17.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
+    <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+    <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="72.1.0.3" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Razor files are needed for the backoffice to work correctly -->
+    <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Remove RazorCompileOnBuild and RazorCompileOnPublish when not using ModelsMode InMemoryAuto -->
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <UserSecretsId>23ea5564-df69-4854-a4f5-25800933df6b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+</Project>

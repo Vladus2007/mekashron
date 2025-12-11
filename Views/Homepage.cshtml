@@ -1,0 +1,162 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@using System.Linq
+
+@{
+    // --- ВАЖНО: ПОДКЛЮЧЕНИЕ ШАБЛОНА ---
+    // Именно эта строчка подключает стили, хедер и футер из файла Master.cshtml
+    Layout = "Master.cshtml"; 
+   
+    // --- ФУНКЦИЯ ПЕРЕВОДА ---
+    Func<string, string, string> T = (key, defaultText) => 
+    {
+        var translation = Umbraco.GetDictionaryValue(key);
+        return string.IsNullOrWhiteSpace(translation) ? defaultText : translation;
+    };
+}
+
+<main class="main" id="primary">
+    
+    @* --- HERO --- *@
+    <section class="hero" data-mobile-bg="" data-desktop-bg="/assets/images/hero.png">
+        <div class="container">
+            @* Если ключа в словаре нет, покажется то, что вторым параметром (на английском) *@
+            <h1 style="text-align: center;">@Html.Raw(T("Home.Hero.Title", "Boost Your Business with AI 20 Years of Development Experience"))</h1>
+            <p style="text-align: center;">@T("Home.Hero.Description", "With over two decades of proven software development experience, we specialize in building advanced platforms and are experts in AI-driven automation solutions. From enterprise tools to industry specific systems, we deliver innovation, reliability, and scale")</p>
+            
+            <div class="buttons">
+                <a href="#" class="button">@T("Home.Hero.Explore", "Explore Solutions")</a>
+                <a href="#" class="button button--dark">@T("Home.Hero.Contact", "Contact Us")</a>
+            </div>
+        </div>
+    </section>
+    
+    @* --- EXPERTISE --- *@
+    <section class="expertise">
+        <div class="container">
+            <h2>@T("Home.Expertise.Title", "Our Expertise")</h2>
+            <ul class="expertise__list">
+                <li>
+                    <div class="row">
+                        <img src="/assets/images/icons/expertise/ai.svg" alt="ai">
+                        <h3>@T("Home.Expertise.Platform", "Platform Development")</h3>
+                    </div>
+                    <p>@T("Home.Expertise.PlatformDesc", "Custom AI systems and scalable platforms")</p>
+                    <a href="#" class="link">@T("General.LearnMore", "Learn more")</a>
+                </li>
+                <li>
+                    <div class="row">
+                        <img src="/assets/images/icons/expertise/solution.svg" alt="solution">
+                        <h3>@T("Home.Expertise.Enterprise", "Enterprise Solutions")</h3>
+                    </div>
+                    <p>@T("Home.Expertise.EnterpriseDesc", "Reliable systems for every business")</p>
+                    <a href="#" class="link">@T("General.LearnMore", "Learn more")</a>
+                </li>
+                <li>
+                    <div class="row">
+                        <img src="/assets/images/icons/expertise/gaming.svg" alt="gaming">
+                        <h3>@T("Home.Expertise.Gaming", "Gaming & Entertainment")</h3>
+                    </div>
+                    <p>@T("Home.Expertise.GamingDesc", "iGaming platforms and integrations")</p>
+                    <a href="#" class="link">@T("General.LearnMore", "Learn more")</a>
+                </li>
+                <li>
+                    <div class="row">
+                        <img src="/assets/images/icons/expertise/apps.svg" alt="apps">
+                        <h3>@T("Home.Expertise.Apps", "Custom Apps")</h3>
+                    </div>
+                    <p>@T("Home.Expertise.AppsDesc", "Tailor made mobile and SaaS solutions")</p>
+                    <a href="#" class="link">@T("General.LearnMore", "Learn more")</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    @* --- PRODUCTS --- *@
+    <section class="products">
+        <div class="container">
+            <h2>@T("Home.Products.Title", "Our Products")</h2>
+            <ul class="products__list">
+                <li>
+                    <img src="/assets/images/products/profichat.png" alt="ai">
+                    <div class="content">
+                        <h3>Profichat.net</h3>
+                        <p>@T("Home.Products.Profichat", "Omnichannel CRM and AI communication platform")</p>
+                        <div class="buttons">
+                            <a href="#" class="button button--dark">@T("General.LearnMore", "Learn more")</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <img src="/assets/images/products/zmenu.png" alt="solution">
+                    <div class="content">
+                        <h3>ZMenu.net</h3>
+                        <p>@T("Home.Products.ZMenu", "Solutions for restaurants and retailers")</p>
+                        <div class="buttons">
+                            <a href="#" class="button button--dark">@T("General.LearnMore", "Learn more")</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <img src="/assets/images/products/mekashron.png" alt="gaming">
+                    <div class="content">
+                        <h3>Mekashron CRM</h3>
+                        <p>@T("Home.Products.Mekashron", "Desktop CRM for Business and Call Centers")</p>
+                        <div class="buttons">
+                             @{
+                                var dlPage = Model.Root().DescendantsOrSelf().FirstOrDefault(x => x.UrlSegment != null && x.UrlSegment.Contains("download"));
+                                var dlUrl = dlPage?.Url() ?? "#";
+                            }
+                            <a href="@dlUrl" class="button button--accent">@T("General.Download", "Download")</a>
+                            <a href="#" class="link">@T("General.LearnMore", "Learn more")</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    @* --- ABOUT / INDUSTRIES --- *@
+    <section class="about">
+        <div class="container">
+            <div class="row">
+                <div class="column">
+                    <h2>@T("Home.Industries.Title", "Industries We Serve")</h2>
+                    <ul class="about__list">
+                        <li>
+                            <img src="/assets/images/serve/ai.svg" alt="ai">
+                            <h3>@T("Home.Industries.AI", "AI and SaaS")</h3>
+                        </li>
+                        <li>
+                            <img src="/assets/images/serve/cart.svg" alt="cart">
+                            <h3>@T("Home.Industries.Retail", "Retail and Hospitality")</h3>
+                        </li>
+                        <li>
+                            <img src="/assets/images/serve/gaming.svg" alt="gaming">
+                            <h3>@T("Home.Industries.Gaming", "iGaming")</h3>
+                        </li>
+                        <li>
+                            <img src="/assets/images/serve/bag.svg" alt="bag">
+                            <h3>@T("Home.Industries.Enterprises", "Enterprises")</h3>
+                        </li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h2>@T("Home.About.Title", "About Mekashron")</h2>
+                    <p>@T("Home.About.Text", "With more than 20 years of development experience...")</p>
+                    <a href="#" class="button button--accent">@T("Home.About.Button", "About Us")</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* --- CTA (BOTTOM) --- *@
+    <section class="platform" data-mobile-bg="" data-desktop-bg="/assets/images/platform.png">
+        <div class="container">
+            <h2 style="text-align: center;">@T("Home.Cta.Title", "Ready to build your next platform?")</h2>
+            <p style="text-align: center;">@T("Home.Cta.Text", "Tell us about your project and goals.")</p>
+            <a href="#" class="button">@T("Home.Cta.Button", "Get in Touch")</a>
+        </div>
+    </section>
+</main>
