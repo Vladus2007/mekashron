@@ -1,40 +1,37 @@
-using Umbraco.Cms.Core;
-using Umbraco.Cms.Web.Common.ApplicationBuilder;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Настройка путей для Render
+// Создаем директории при запуске
 var contentRootPath = builder.Environment.ContentRootPath;
 var webRootPath = builder.Environment.WebRootPath;
 
-Console.WriteLine($"Content Root: {contentRootPath}");
-Console.WriteLine($"Web Root: {webRootPath}");
+Console.WriteLine("Creating directories...");
 
-// Создаем необходимые директории при запуске
-var directories = new[]
+try
 {
-    Path.Combine(webRootPath, "media"),
-    Path.Combine(webRootPath, "umbraco"),
-    Path.Combine(contentRootPath, "App_Data"),
-    Path.Combine(contentRootPath, "umbraco", "Logs"),
-    Path.Combine(contentRootPath, "Data")
-};
-
-foreach (var directory in directories)
-{
-    if (!Directory.Exists(directory))
+    // App_Data для SQLite
+    var appDataPath = Path.Combine(contentRootPath, "App_Data");
+    if (!Directory.Exists(appDataPath))
     {
-        Directory.CreateDirectory(directory);
-        Console.WriteLine($"Created directory: {directory}");
+        Directory.CreateDirectory(appDataPath);
+        Console.WriteLine($"Created: {appDataPath}");
     }
-}
 
-// Проверяем и создаем SQLite базу данных
-var dbPath = Path.Combine(contentRootPath, "App_Data", "Umbraco.sqlite.db");
-if (!File.Exists(dbPath))
+    // Media directory
+    var mediaPath = Path.Combine(webRootPath, "media");
+    if (!Directory.Exists(mediaPath))
+    {
+        Directory.CreateDirectory(mediaPath);
+        Console.WriteLine($"Created: {mediaPath}");
+    }
+
+    // Проверяем права
+    File.WriteAllText(Path.Combine(appDataPath, "test.txt"), "test");
+    File.Delete(Path.Combine(appDataPath, "test.txt"));
+    Console.WriteLine("Write permission OK");
+}
+catch (Exception ex)
 {
-    Console.WriteLine($"SQLite database not found at: {dbPath}");
-    Console.WriteLine("Umbraco will create it during installation");
+    Console.WriteLine($"Directory error: {ex.Message}");
 }
 
 // Настраиваем Umbraco

@@ -1,6 +1,6 @@
 ﻿services:
   - type: web
-    name: umbraco-sqlite
+    name: umbraco-app
     env: docker
     dockerfilePath: ./Dockerfile
     envVars:
@@ -8,13 +8,8 @@
         value: Production
       - key: ASPNETCORE_URLS
         value: http://*:$PORT
-      # Принудительно указываем путь к данным
       - key: Umbraco__CMS__DataDirectory
         value: /app/App_Data
-      # Для отладки включаем логи
-      - key: Serilog__MinimumLevel__Default
-        value: Debug
-    # Диски для хранения данных
     disks:
       - name: appdata
         mountPath: /app/App_Data
@@ -24,6 +19,3 @@
         sizeGB: 5
     healthCheckPath: /umbraco
     autoDeploy: true
-    # Пробуем увеличить таймауты
-    initialDelaySec: 60
-    maxShutdownDelaySec: 30

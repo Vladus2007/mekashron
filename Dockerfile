@@ -24,15 +24,14 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Создаем директории с правильными правами ДО копирования файлов
+# Создаем директории с правильными правами
 RUN mkdir -p /app/wwwroot/media \
     && mkdir -p /app/wwwroot/umbraco \
     && mkdir -p /app/App_Data \
-    && chmod -R 777 /app/App_Data \  # Временные права для отладки
+    && chmod -R 777 /app/App_Data \
     && chmod -R 777 /app/wwwroot/media
 
 # Создаем SQLite файл заранее с правильными правами
-RUN touch /app/App_Data/Umbraco.sqlite.db \
-    && chmod 666 /app/App_Data/Umbraco.sqlite.db
+RUN touch /app/App_Data/Umbraco.sqlite.db && chmod 666 /app/App_Data/Umbraco.sqlite.db
 
 ENTRYPOINT ["dotnet", "MyProject1.dll"]
